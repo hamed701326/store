@@ -1,17 +1,20 @@
 package ir.store.java.object.model;
 
-public class readingCase extends Good {
-    private String publication;
-    private String author;
+public class Shoe extends Good {
+    private String type;
+    private int size;
+
     @Override
     public String toString() {
-        return "Reading Case {" +
+        return "Shoe {" +
                 "Id=" + getId() +
                 ", name='" + getName() + '\'' +
-                " ,type='"+this.publication+'\''+
-                " ,author='"+this.author+'\''+
+                " ,type='"+this.type+'\''+
+                " ,size="+this.size+
                 ", stock=" + getStock() +
                 ", price=" + getPrice() +
                 '}';
     }
+
+
 }
