@@ -80,7 +80,7 @@ public class ElectricalVehicleDAOImpl implements ElectricalVehicleDAO {
             String query="select * from electrical_vehicle where  id="+electricalVehicleId;
             stmt=connection.createStatement();
             rs=stmt.executeQuery(query);
-            while (rs.next()){
+
                 ElectricalVehicle good=new ElectricalVehicle();
                 good.setId(rs.getInt("Id"));
                 good.setName(rs.getString("name"));
@@ -90,7 +90,7 @@ public class ElectricalVehicleDAOImpl implements ElectricalVehicleDAO {
                 good.setType(rs.getString("type"));
 
                 return good;
-            }
+
 
         } catch (SQLException e) {
             e.printStackTrace();
