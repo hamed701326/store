@@ -13,7 +13,7 @@ public class ShoeDAOImpl implements ShoeDAO {
     private static DataSource dataSource=new DataSource();
     @Override
     public List<Shoe> getAllShoe() {
-        DataSource dataSource=new DataSource();
+
         Connection con=dataSource.createConnection();
         Statement statement=null;
         ResultSet rs=null;
@@ -56,24 +56,29 @@ public class ShoeDAOImpl implements ShoeDAO {
         Connection dbConnection=null;
         PreparedStatement statement=null;
         String query="insert into shoe values (?,?,?,?,?,?)";
-        try{
+        if (!existCheck(shoe.getId())) {
+            try {
 
-            dbConnection=dataSource.createConnection();
-            //todo check are there any shoes with this id;if there are,update shoe with this id
-            statement=dbConnection.prepareStatement(query);
-            statement.setInt(1,shoe.getId());
-            statement.setString(2,shoe.getName());
-            statement.setString(3,shoe.getType());
-            statement.setInt(4,shoe.getSize());
-            statement.setInt(5,shoe.getStock());
-            statement.setDouble(6,shoe.getPrice());
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        finally {
-            finish(dbConnection,statement);
-        }
+                dbConnection = dataSource.createConnection();
 
+                statement = dbConnection.prepareStatement(query);
+                statement.setInt(1, shoe.getId());
+                statement.setString(2, shoe.getName());
+                statement.setString(3, shoe.getType());
+                statement.setInt(4, shoe.getSize());
+                statement.setInt(5, shoe.getStock());
+                statement.setDouble(6, shoe.getPrice());
+            } catch (SQLException e) {
+                e.printStackTrace();
+            } finally {
+                finish(dbConnection, statement);
+            }
+        }
+        else {
+            System.out.println("there is a shoe with id="+shoe.getId());
+            System.out.print("Would you like to update this shoe? \n\t1.Yes \n\t2.No \n respone:");
+            if(new Scanner(System.in).nextInt()==1){updateShoe(shoe);}
+        };
     }
     private void finish(Connection dbConnection, Statement statement) {
         if(statement!=null){
@@ -155,6 +160,7 @@ public class ShoeDAOImpl implements ShoeDAO {
                 statement.setInt(3, shoe.getSize());
                 statement.setInt(4, shoe.getStock());
                 statement.setDouble(5, shoe.getPrice());
+                statement.execute();
 
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -165,8 +171,7 @@ public class ShoeDAOImpl implements ShoeDAO {
         }else {
             System.out.println("there aren't any shoe with id="+shoe.getId());
             System.out.print("Would you like to add this shoe? \n\t1.Yes \n\t2.No \n respone:");
-            int respone=new Scanner(System.in).nextInt();
-            if(respone==1){addShoe(shoe);}
+            if(new Scanner(System.in).nextInt()==1){addShoe(shoe);}
         }
 
     }
@@ -187,10 +192,10 @@ public class ShoeDAOImpl implements ShoeDAO {
                 finish(dbConnection, statement);
             }
         }
+        else System.out.println("There aren't any shoe with id= "+shoeId);
     }
     public boolean existCheck(int shoeId){
         boolean exist=(getShoe(shoeId)!=null);
-        if(!exist) System.out.println("There aren't any shoe with id= "+shoeId);
         return exist;
     }
 }
