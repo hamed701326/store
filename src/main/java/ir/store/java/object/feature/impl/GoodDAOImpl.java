@@ -4,29 +4,28 @@ import ir.store.java.object.core.annotation.configureConnection.DataSource;
 import ir.store.java.object.feature.usecase.GoodDAO;
 import ir.store.java.object.model.Good;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 public class GoodDAOImpl implements GoodDAO {
+    private DataSource dataSource=new DataSource();
     @Override
-    public List<Good> getAllGoods() {
-        DataSource dataSource=new DataSource();
+    public List<Good> getAllGood() {
+
         Connection con=dataSource.createConnection();
         Statement statement=null;
         ResultSet rs=null;
         List<Good> goods=new ArrayList<>();
         try
         {
-            String query="select * from employee";
+            String query="select * from goods";
             statement=con.createStatement();
             rs=statement.executeQuery(query);
             while(rs.next()){
                 Good good=new Good();
-                good.setId(rs.getInt("Id"));
+                good.setId(rs.getInt("id"));
                 good.setName(rs.getString("name"));
                 good.setStock(rs.getInt("stock"));
                 good.setPrice(rs.getInt("price"));
@@ -47,7 +46,7 @@ public class GoodDAOImpl implements GoodDAO {
     public void addGood(Good good) {
         Connection dbConnection=null;
         Statement statement=null;
-        String sql="insert into good values("+good.getId()+","+good.getName() +","+good.getPrice()+","+good.getStock()+")";
+        String sql="insert into goods values("+good.getId()+","+good.getName() +","+good.getPrice()+","+good.getStock()+")";
         try
         {
             DataSource dataSource=new DataSource();
@@ -71,12 +70,12 @@ public class GoodDAOImpl implements GoodDAO {
         Statement stmt=null;
         ResultSet rs=null;
         try{
-            String query="select * from good where  good_id="+goodId;
+            String query="select * from goods where  id="+goodId;
             stmt=connection.createStatement();
             rs=stmt.executeQuery(query);
             while (rs.next()){
                 Good good=new Good();
-                good.setId(rs.getInt("Id"));
+                good.setId(rs.getInt("id"));
                 good.setName(rs.getString("name"));
                 good.setPrice(rs.getInt("price"));
                 good.setStock(rs.getInt("stock"));
@@ -92,7 +91,53 @@ public class GoodDAOImpl implements GoodDAO {
         return null;
     }
 
-    private void finish(Connection connection, Statement stmt, ResultSet rs) {
+
+    @Override
+    public void updateGood(Good good) {
+        Connection connection=null;
+        PreparedStatement statement=null;
+        if(existCheck(good.getId())) {
+            String query = "update goods set name=? , stock=? ,  price=? where id =" + good.getId();
+            try {
+                connection = dataSource.createConnection();
+                statement = connection.prepareStatement(query);
+                statement.setString(1, good.getName());
+                statement.setInt(2, good.getStock());
+                statement.setDouble(3, good.getPrice());
+                statement.execute();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            } finally {
+                finish(connection, statement);
+            }
+        }else {
+            System.out.println("There aren't any good with id= " + good.getId());
+            System.out.print("Would you like to add this good? \n\t1.Yes \n\t2.No \n respone:");
+            if (new Scanner(System.in).nextInt() == 1) {
+                addGood(good);
+            }
+        }
+    }
+
+    public boolean existCheck(int id) {
+        boolean exist=(getGood(id)!=null);
+        return exist;
+    }
+
+    public void finish(Connection dbConnection, Statement statement) {
+        try {
+            if(statement!=null) {
+                statement.close();
+            }
+            if(dbConnection!=null){
+                dbConnection.close();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+    }
+    public void finish(Connection connection, Statement stmt, ResultSet rs) {
         try{
             if(connection!=null){
                 connection.close();
@@ -109,49 +154,10 @@ public class GoodDAOImpl implements GoodDAO {
     }
 
     @Override
-    public void updateGood(Good good) {
-        Connection dbConnection=null;
-        Statement statement=null;
-        String sql="update good set name= "+good.getName()+" where id ="+good.getId();
-        try{
-            DataSource dataSource=new DataSource();
-            dbConnection=dataSource.createConnection();
-            statement=dbConnection.prepareStatement(sql);
-            statement.executeUpdate(sql);
-            System.out.println("Record is updated into good table for id :"
-                    +good.getId());
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        finally {
-            finish(dbConnection, statement);
-        }
-    }
-
-    private void finish(Connection dbConnection, Statement statement) {
-        if(statement!=null){
-            try {
-                statement.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-        if(dbConnection!=null)
-        {
-            try
-            {
-                dbConnection.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    @Override
     public void deleteGood(int goodId) {
         Connection dbConnection=null;
         Statement statement=null;
-        String sql="delete from good where Id="+goodId;
+        String sql="delete from goods where id="+goodId;
         try{
             DataSource dataSource=new DataSource();
             dbConnection=dataSource.createConnection();
@@ -165,4 +171,5 @@ public class GoodDAOImpl implements GoodDAO {
         }
 
     }
+
 }

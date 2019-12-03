@@ -1,7 +1,7 @@
 package ir.store.java.object.feature.impl;
 
 import ir.store.java.object.core.annotation.configureConnection.DataSource;
-import ir.store.java.object.feature.usecase.ShoeDAO;
+import ir.store.java.object.feature.usecase.GoodDAO;
 import ir.store.java.object.model.Shoe;
 
 import java.sql.*;
@@ -11,6 +11,7 @@ import java.util.Scanner;
 
 public class ShoeDAOImpl implements ShoeDAO {
     private static DataSource dataSource=new DataSource();
+    private GoodDAO goodDAO=new GoodDAOImpl();
     @Override
     public List<Shoe> getAllShoe() {
 
@@ -53,6 +54,7 @@ public class ShoeDAOImpl implements ShoeDAO {
 
     @Override
     public void addShoe(Shoe shoe) {
+        goodDAO.addGood(shoe);
         Connection dbConnection=null;
         PreparedStatement statement=null;
         String query="insert into shoe values (?,?,?,?,?,?)";
@@ -145,6 +147,7 @@ public class ShoeDAOImpl implements ShoeDAO {
 
     @Override
     public void updateShoe(Shoe shoe) {
+        goodDAO.updateGood(shoe);
         Connection connection=null;
         PreparedStatement statement=null;
         if(existCheck(shoe.getId())) {
@@ -178,6 +181,7 @@ public class ShoeDAOImpl implements ShoeDAO {
 
     @Override
     public void deleteShoe(int shoeId) {
+        goodDAO.deleteGood(shoeId);
         Connection dbConnection=null;
         Statement statement=null;
         if (existCheck(shoeId)) {

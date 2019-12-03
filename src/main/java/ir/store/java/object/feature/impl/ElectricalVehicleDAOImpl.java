@@ -1,22 +1,25 @@
 package ir.store.java.object.feature.impl;
 
 import ir.store.java.object.core.annotation.configureConnection.DataSource;
-import ir.store.java.object.feature.usecase.ElectricalVehicleDAO;
+import ir.store.java.object.feature.usecase.GoodDAO;
 import ir.store.java.object.model.ElectricalVehicle;
+import ir.store.java.object.model.Good;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public class ElectricalVehicleDAOImpl implements ElectricalVehicleDAO {
+
+public class ElectricalVehicleDAOImpl extends GoodDAOImpl {
     private static DataSource dataSource=new DataSource();
+    private GoodDAO goodDAO=new GoodDAOImpl();
     @Override
-    public List<ElectricalVehicle> getAllElectricalVehicle() {
+    public List<Good> getAllGood() {
         Connection con=dataSource.createConnection();
         Statement statement=null;
         ResultSet rs=null;
-        List<ElectricalVehicle> electricalVehicles=new ArrayList<>();
+        List<Good> goods=new ArrayList<>();
         try
         {
             String query="select * from electrical_vehicle";
@@ -30,7 +33,7 @@ public class ElectricalVehicleDAOImpl implements ElectricalVehicleDAO {
                 good.setType(rs.getString("type"));
                 good.setStock(rs.getInt("stock"));
                 good.setPrice(rs.getInt("price"));
-                electricalVehicles.add(good);
+                goods.add(good);
             }
 
         } catch (SQLException e) {
@@ -40,10 +43,11 @@ public class ElectricalVehicleDAOImpl implements ElectricalVehicleDAO {
             finish(con, statement, rs);
 
         }
-        return electricalVehicles;
+        return goods;
     }
-
-    public void addElectricalVehicle(ElectricalVehicle electricalVehicle) {
+    @Override
+    public void addGood(Good electricalVehicle) {
+        goodDAO.addGood(electricalVehicle);
         Connection dbConnection=null;
         PreparedStatement statement=null;
         if(!existCheck(electricalVehicle.getId())) {
@@ -54,8 +58,8 @@ public class ElectricalVehicleDAOImpl implements ElectricalVehicleDAO {
                 statement = dbConnection.prepareStatement(sql);
                 statement.setInt(1, electricalVehicle.getId());
                 statement.setString(2, electricalVehicle.getName());
-                statement.setString(3, electricalVehicle.getType());
-                statement.setInt(4, electricalVehicle.getPower());
+                statement.setString(3,((ElectricalVehicle) electricalVehicle).getType());
+                statement.setInt(4,((ElectricalVehicle) electricalVehicle).getPower());
                 statement.setInt(5, electricalVehicle.getStock());
                 statement.setDouble(6, electricalVehicle.getPrice());
 
@@ -70,14 +74,14 @@ public class ElectricalVehicleDAOImpl implements ElectricalVehicleDAO {
         }else {
             System.out.println("there is a shoe with id="+electricalVehicle.getId());
             System.out.print("Would you like to update this shoe? \n\t1.Yes \n\t2.No \n respone:");
-            if(new Scanner(System.in).nextInt()==1) updateElectricalVehicle(electricalVehicle);
+            if(new Scanner(System.in).nextInt()==1) updateGood(electricalVehicle);
 
         }
 
     }
 
     @Override
-    public ElectricalVehicle getElectricalVehicle(int electricalVehicleId) {
+    public Good getGood(int electricalVehicleId) {
 
         Connection connection=dataSource.createConnection();
         Statement stmt=null;
@@ -107,24 +111,10 @@ public class ElectricalVehicleDAOImpl implements ElectricalVehicleDAO {
         return null;
     }
 
-    private void finish(Connection connection, Statement stmt, ResultSet rs) {
-        try{
-            if(connection!=null){
-                connection.close();
-            }
-            if(stmt!=null){
-                stmt.close();
-            }
-            if(rs!=null){
-                rs.close();
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
 
     @Override
-    public void updateElectricalVehicle(ElectricalVehicle good) {
+    public void updateGood(Good good) {
+        goodDAO.updateGood(good);
         Connection connection=null;
         PreparedStatement statement=null;
         if(existCheck(good.getId())) {
@@ -134,8 +124,8 @@ public class ElectricalVehicleDAOImpl implements ElectricalVehicleDAO {
                 connection = dataSource.createConnection();
                 statement = connection.prepareStatement(query);
                 statement.setString(1, good.getName());
-                statement.setString(2, good.getType());
-                statement.setInt(3, good.getPower());
+                statement.setString(2,((ElectricalVehicle) good).getType());
+                statement.setInt(3,((ElectricalVehicle) good).getPower());
                 statement.setInt(4, good.getStock());
                 statement.setDouble(5, good.getPrice());
                 statement.execute();
@@ -148,32 +138,15 @@ public class ElectricalVehicleDAOImpl implements ElectricalVehicleDAO {
             System.out.println("There aren't any electrical vehicle with id= " + good.getId());
             System.out.print("Would you like to add this reading case? \n\t1.Yes \n\t2.No \n respone:");
             if (new Scanner(System.in).nextInt() == 1) {
-                updateElectricalVehicle(good);
+                addGood(good);
             }
         }
     }
 
-    private void finish(Connection connection, Statement statement) {
-        if(statement!=null){
-            try {
-                statement.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-        if(connection!=null)
-        {
-            try
-            {
-                connection.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-    }
 
     @Override
-    public void deleteElectricalVehicle(int electricalVehicleId) {
+    public void deleteGood(int electricalVehicleId) {
+        goodDAO.deleteGood(electricalVehicleId);
         Connection dbConnection=null;
         Statement statement=null;
         if(existCheck(electricalVehicleId)) {
@@ -193,8 +166,4 @@ public class ElectricalVehicleDAOImpl implements ElectricalVehicleDAO {
 
 }
 
-    private boolean existCheck(int id) {
-        boolean exist=(getElectricalVehicle(id)!=null);
-        return exist;
-    }
 }

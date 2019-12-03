@@ -1,7 +1,7 @@
 package ir.store.java.object.feature.impl;
 
 import ir.store.java.object.core.annotation.configureConnection.DataSource;
-import ir.store.java.object.feature.usecase.ReadingCaseDAO;
+import ir.store.java.object.feature.usecase.GoodDAO;
 import ir.store.java.object.model.ReadingCase;
 
 import java.sql.*;
@@ -11,6 +11,7 @@ import java.util.Scanner;
 
 public class ReadingCaseDAOImpl implements ReadingCaseDAO {
     private static DataSource dataSource=new DataSource();
+    private GoodDAO goodDAO=new GoodDAOImpl();
     private void finish(Connection dbConnection, Statement statement) {
         if(statement!=null){
             try {
@@ -61,6 +62,7 @@ public class ReadingCaseDAOImpl implements ReadingCaseDAO {
 
     @Override
     public void addReadingCase(ReadingCase readingCase) {
+        goodDAO.addGood(readingCase);
         Connection dbConnection=null;
         PreparedStatement statement=null;
         String query="insert into reading_cases values (?,?,?,?,?,?)";
@@ -121,6 +123,7 @@ public class ReadingCaseDAOImpl implements ReadingCaseDAO {
 
     @Override
     public void updateReadingCase(ReadingCase readingCase) {
+        goodDAO.updateGood(readingCase);
         Connection connection=null;
         PreparedStatement statement=null;
         if(existCheck(readingCase.getId())) {
@@ -154,6 +157,7 @@ public class ReadingCaseDAOImpl implements ReadingCaseDAO {
 
     @Override
     public void deleteReadingCase(int readingCaseId) {
+        goodDAO.deleteGood(readingCaseId);
         Connection dbConnection=null;
         Statement statement=null;
         if (existCheck(readingCaseId)) {

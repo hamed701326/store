@@ -3,7 +3,7 @@ package ir.store.java.object.model;
 import ir.store.java.object.core.annotation.Entity;
 
 @Entity
-public abstract class ReadingCase extends Good {
+public class ReadingCase extends Good {
     private String publication;
     private String author;
 
