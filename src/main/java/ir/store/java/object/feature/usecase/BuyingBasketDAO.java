@@ -5,11 +5,10 @@ import ir.store.java.object.model.Good;
 import java.util.List;
 
 public interface BuyingBasketDAO {
-    public void createTemporaryBasket();
-    public List<Good> getAllGoods();
-    public  void addGood(Good good);
-    public Good getGood(int goodId);
-    public void updateGood(Good good);
-    public void deleteGood(int goodId);
+    public List<Good> getAllGoods(int userId);
+    public  void addGood(Good good,int userId);
+    public Good getGood(int goodId,int userId);
+    public void updateGood(Good good,int userId);
+    public void deleteGood(int goodId,int userId);
 
 }

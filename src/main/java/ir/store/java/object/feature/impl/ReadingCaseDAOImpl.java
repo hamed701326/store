@@ -2,6 +2,7 @@ package ir.store.java.object.feature.impl;
 
 import ir.store.java.object.core.annotation.configureConnection.DataSource;
 import ir.store.java.object.feature.usecase.GoodDAO;
+import ir.store.java.object.model.Good;
 import ir.store.java.object.model.ReadingCase;
 
 import java.sql.*;
@@ -9,34 +10,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public class ReadingCaseDAOImpl implements ReadingCaseDAO {
+public class ReadingCaseDAOImpl extends GoodDAOImpl{
     private static DataSource dataSource=new DataSource();
     private GoodDAO goodDAO=new GoodDAOImpl();
-    private void finish(Connection dbConnection, Statement statement) {
-        if(statement!=null){
-            try {
-                statement.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-        if(dbConnection!=null)
-        {
-            try
-            {
-                dbConnection.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-    }
 
     @Override
-    public List<ReadingCase> getAllReadingCase() {
+    public List<Good> getAllGood() {
         Connection con=dataSource.createConnection();
         Statement statement=null;
         ResultSet rs=null;
-        List<ReadingCase> readingCaseList=new ArrayList<>();
+        List<Good> readingCaseList=new ArrayList<>();
         try {
             String query="select * from reading_cases ";
             statement=con.createStatement();
@@ -48,7 +31,7 @@ public class ReadingCaseDAOImpl implements ReadingCaseDAO {
                 readingCase.setPublication(rs.getString("publication"));
                 readingCase.setAuthor(rs.getString("author"));
                 readingCase.setStock(rs.getInt("stock"));
-                readingCase.setPrice(rs.getInt("price"));
+                readingCase.setPrice(rs.getDouble("price"));
                 readingCaseList.add(readingCase);
             }
         } catch (Exception e) {
@@ -61,7 +44,7 @@ public class ReadingCaseDAOImpl implements ReadingCaseDAO {
     }
 
     @Override
-    public void addReadingCase(ReadingCase readingCase) {
+    public void addGood(Good readingCase) {
         goodDAO.addGood(readingCase);
         Connection dbConnection=null;
         PreparedStatement statement=null;
@@ -74,8 +57,8 @@ public class ReadingCaseDAOImpl implements ReadingCaseDAO {
                 statement = dbConnection.prepareStatement(query);
                 statement.setInt(1, readingCase.getId());
                 statement.setString(2, readingCase.getName());
-                statement.setString(3, readingCase.getPublication());
-                statement.setString(4, readingCase.getAuthor());
+                statement.setString(3,((ReadingCase) readingCase).getPublication());
+                statement.setString(4,((ReadingCase) readingCase).getAuthor());
                 statement.setInt(5, readingCase.getStock());
                 statement.setDouble(6, readingCase.getPrice());
             } catch (SQLException e) {
@@ -87,14 +70,14 @@ public class ReadingCaseDAOImpl implements ReadingCaseDAO {
         else {
             System.out.println("there is a shoe with id="+readingCase.getId());
             System.out.print("Would you like to update this shoe? \n\t1.Yes \n\t2.No \n respone:");
-            if(new Scanner(System.in).nextInt()==1){updateReadingCase(readingCase);}
+            if(new Scanner(System.in).nextInt()==1){updateGood(readingCase);}
         };
     }
 
 
 
     @Override
-    public ReadingCase getReadingCase(int readingCaseId) {
+    public ReadingCase getGood(int readingCaseId) {
         Connection connection=null;
         PreparedStatement statement=null;
         ResultSet rs=null;
@@ -111,7 +94,7 @@ public class ReadingCaseDAOImpl implements ReadingCaseDAO {
             readingCase.setPublication(rs.getString("publication"));
             readingCase.setAuthor(rs.getString("author"));
             readingCase.setStock(rs.getInt("stock"));
-            readingCase.setPrice(rs.getInt("price"));
+            readingCase.setPrice(rs.getDouble("price"));
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -122,7 +105,7 @@ public class ReadingCaseDAOImpl implements ReadingCaseDAO {
     }
 
     @Override
-    public void updateReadingCase(ReadingCase readingCase) {
+    public void updateGood(Good readingCase) {
         goodDAO.updateGood(readingCase);
         Connection connection=null;
         PreparedStatement statement=null;
@@ -135,8 +118,8 @@ public class ReadingCaseDAOImpl implements ReadingCaseDAO {
                 statement = connection.prepareStatement(query);
                 statement.setInt(6, readingCase.getId());
                 statement.setString(1, readingCase.getName());
-                statement.setString(2, readingCase.getPublication());
-                statement.setString(3, readingCase.getAuthor());
+                statement.setString(2, ((ReadingCase) readingCase).getPublication());
+                statement.setString(3, ((ReadingCase) readingCase).getAuthor());
                 statement.setInt(4, readingCase.getStock());
                 statement.setDouble(5, readingCase.getPrice());
                 statement.execute();
@@ -149,14 +132,14 @@ public class ReadingCaseDAOImpl implements ReadingCaseDAO {
         }else {
             System.out.println("there aren't any reading case with id="+readingCase.getId());
             System.out.print("Would you like to add this reading case? \n\t1.Yes \n\t2.No \n respone:");
-            if(new Scanner(System.in).nextInt()==1){updateReadingCase(readingCase);}
+            if(new Scanner(System.in).nextInt()==1){addGood(readingCase);}
         }
 
 
     }
 
     @Override
-    public void deleteReadingCase(int readingCaseId) {
+    public void deleteGood(int readingCaseId) {
         goodDAO.deleteGood(readingCaseId);
         Connection dbConnection=null;
         Statement statement=null;
@@ -173,25 +156,6 @@ public class ReadingCaseDAOImpl implements ReadingCaseDAO {
             }
         }
         else System.out.println("There aren't any reading Case with id= "+readingCaseId);
-    }
-    private boolean existCheck(int id) {
-        boolean exist=(getReadingCase(id)!=null);
-        return exist;
-    }
-    private void finish(Connection connection, Statement stmt, ResultSet rs) {
-        try{
-            if(connection!=null){
-                connection.close();
-            }
-            if(stmt!=null){
-                stmt.close();
-            }
-            if(rs!=null){
-                rs.close();
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
     }
 
 }

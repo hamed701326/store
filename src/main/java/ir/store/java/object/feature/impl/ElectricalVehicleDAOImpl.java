@@ -32,7 +32,7 @@ public class ElectricalVehicleDAOImpl extends GoodDAOImpl {
                 good.setPower(rs.getInt("power"));
                 good.setType(rs.getString("type"));
                 good.setStock(rs.getInt("stock"));
-                good.setPrice(rs.getInt("price"));
+                good.setPrice(rs.getDouble("price"));
                 goods.add(good);
             }
 
@@ -95,7 +95,7 @@ public class ElectricalVehicleDAOImpl extends GoodDAOImpl {
             ElectricalVehicle good=new ElectricalVehicle();
             good.setId(rs.getInt("Id"));
             good.setName(rs.getString("name"));
-            good.setPrice(rs.getInt("price"));
+            good.setPrice(rs.getDouble("price"));
             good.setStock(rs.getInt("stock"));
             good.setPower(rs.getInt("power"));
             good.setType(rs.getString("type"));

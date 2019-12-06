@@ -6,6 +6,15 @@ import ir.store.java.object.core.annotation.Entity;
 public class ReadingCase extends Good {
     private String publication;
     private String author;
+    private String type;
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
 
     public String getPublication() {
         return publication;
@@ -28,7 +37,8 @@ public class ReadingCase extends Good {
         return "Reading Case {" +
                 "Id=" + getId() +
                 ", name='" + getName() + '\'' +
-                " ,type='"+this.publication+'\''+
+                " ,type='"+this.type+"\'"+
+                ",publication='"+this.publication+'\''+
                 " ,author='"+this.author+'\''+
                 ", stock=" + getStock() +
                 ", price=" + getPrice() +

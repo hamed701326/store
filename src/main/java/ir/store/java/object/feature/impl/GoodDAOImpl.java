@@ -10,10 +10,9 @@ import java.util.List;
 import java.util.Scanner;
 
 public class GoodDAOImpl implements GoodDAO {
-    private DataSource dataSource=new DataSource();
     @Override
     public List<Good> getAllGood() {
-
+        DataSource dataSource=new DataSource();
         Connection con=dataSource.createConnection();
         Statement statement=null;
         ResultSet rs=null;
@@ -28,7 +27,8 @@ public class GoodDAOImpl implements GoodDAO {
                 good.setId(rs.getInt("id"));
                 good.setName(rs.getString("name"));
                 good.setStock(rs.getInt("stock"));
-                good.setPrice(rs.getInt("price"));
+                good.setPrice(rs.getDouble("price"));
+                good.setDetails(rs.getString("details"));
                 goods.add(good);
             }
 
@@ -44,24 +44,29 @@ public class GoodDAOImpl implements GoodDAO {
 
     @Override
     public void addGood(Good good) {
-        Connection dbConnection=null;
-        Statement statement=null;
-        String sql="insert into goods values("+good.getId()+","+good.getName() +","+good.getPrice()+","+good.getStock()+")";
-        try
-        {
-            DataSource dataSource=new DataSource();
-            dbConnection=dataSource.createConnection();
-            statement=dbConnection.prepareStatement(sql);
-            statement.executeUpdate(sql);
-            System.out.println("Record is inserted into Good table for Good: "+good.getName());
-        } catch (SQLException e) {
-            e.printStackTrace();
+        Connection dbConnection = null;
+        Statement statement = null;
+        if (!existCheck(good.getId())){
+            String sql = "insert into goods values(" + good.getId() + ",'" + good.getName() + "\'," + good.getPrice() + ","
+                    + good.getStock() + ",'"
+                    + good.getDetails() +
+                    "\')";
+            try {
+                DataSource dataSource = new DataSource();
+                dbConnection = dataSource.createConnection();
+                statement = dbConnection.prepareStatement(sql);
+                statement.executeUpdate(sql);
+                System.out.println("Record is inserted into Good table for Good: " + good.getName());
+            } catch (SQLException e) {
+                e.printStackTrace();
+            } finally {
+                finish(dbConnection, statement);
+            }
         }
-        finally {
-            finish(dbConnection, statement);
-        }
+        else{
+            updateGood(good);}
 
-    }
+        }
 
     @Override
     public Good getGood(int goodId) {
@@ -77,8 +82,9 @@ public class GoodDAOImpl implements GoodDAO {
                 Good good=new Good();
                 good.setId(rs.getInt("id"));
                 good.setName(rs.getString("name"));
-                good.setPrice(rs.getInt("price"));
+                good.setPrice(rs.getDouble("price"));
                 good.setStock(rs.getInt("stock"));
+                good.setDetails(rs.getString("details"));
                 return good;
             }
 
@@ -94,6 +100,7 @@ public class GoodDAOImpl implements GoodDAO {
 
     @Override
     public void updateGood(Good good) {
+        DataSource dataSource=new DataSource();
         Connection connection=null;
         PreparedStatement statement=null;
         if(existCheck(good.getId())) {

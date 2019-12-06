@@ -7,8 +7,16 @@ public class Good {
     private int Id;
     private String name;
     private int stock;
-    private int price;
+    private Double price;
+    private String details;
 
+    public String getDetails() {
+        return details;
+    }
+
+    public void setDetails(String details) {
+        this.details = details;
+    }
 
     public int getId() {
         return Id;
@@ -22,7 +30,7 @@ public class Good {
         return stock;
     }
 
-    public int getPrice() {
+    public Double getPrice() {
         return price;
     }
 
@@ -39,8 +47,16 @@ public class Good {
         this.stock = stock;
     }
 
-    public void setPrice(int price) {
+    public void setPrice(Double price) {
         this.price = price;
     }
 
+    @Override
+    public String toString() {
+        return "Good:" +
+                "Id=" + Id +
+                ", name='" + name + '\'' +
+                ", stock=" + stock +
+                ", price=" + price ;
+    }
 }
