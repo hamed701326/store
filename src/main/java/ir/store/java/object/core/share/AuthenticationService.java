@@ -6,6 +6,7 @@ public class AuthenticationService {
     private User loginUser;
 
     private static AuthenticationService authenticationService = null;
+
     public static AuthenticationService getInstance() {
         if (authenticationService == null) {
             authenticationService = new AuthenticationService();

@@ -37,9 +37,9 @@ public class ReadingCase extends Good {
         return "Reading Case {" +
                 "Id=" + getId() +
                 ", name='" + getName() + '\'' +
-                " ,type='"+this.type+"\'"+
-                ",publication='"+this.publication+'\''+
-                " ,author='"+this.author+'\''+
+                " ,type='" + this.type + "\'" +
+                ",publication='" + this.publication + '\'' +
+                " ,author='" + this.author + '\'' +
                 ", stock=" + getStock() +
                 ", price=" + getPrice() +
                 '}';

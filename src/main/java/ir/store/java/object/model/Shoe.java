@@ -25,8 +25,8 @@ public class Shoe extends Good {
         return "Shoe {" +
                 "Id=" + getId() +
                 ", name='" + getName() + '\'' +
-                " ,type='"+this.type+'\''+
-                " ,size="+this.size+
+                " ,type='" + this.type + '\'' +
+                " ,size=" + this.size +
                 ", stock=" + getStock() +
                 ", price=" + getPrice() +
                 '}';

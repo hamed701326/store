@@ -28,7 +28,7 @@ public class ElectricalVehicle extends Good {
         return "Electrical Vehicle {" +
                 "Id=" + getId() +
                 ", name='" + getName() + '\'' +
-                ", type='"+this.type+'\''+
+                ", type='" + this.type + '\'' +
                 ", power=" + this.power +
                 ", stock=" + getStock() +
                 ", price=" + getPrice() +

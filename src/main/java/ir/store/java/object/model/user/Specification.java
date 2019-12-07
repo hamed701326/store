@@ -1,16 +1,19 @@
 package ir.store.java.object.model.user;
 
-public class Specification{
+public class Specification {
     private String name;
     private String lastName;
     private String phoneNumber;
     private String emailAddress;
-    Specification(){}
-    Specification(String name,String lastName, String emailAddress, String phoneNumber) {
-        this.name=name;
-        this.lastName=lastName;
-        this.phoneNumber=phoneNumber;
-        this.emailAddress=emailAddress;
+
+    Specification() {
+    }
+
+    public Specification(String name, String lastName, String emailAddress, String phoneNumber) {
+        this.name = name;
+        this.lastName = lastName;
+        this.phoneNumber = phoneNumber;
+        this.emailAddress = emailAddress;
     }
 
     public void setName(String name) {
@@ -51,6 +54,6 @@ public class Specification{
                 "name='" + name + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +
-                ", emailAddress='" + emailAddress +'\'';
+                ", emailAddress='" + emailAddress + '\'';
     }
 }

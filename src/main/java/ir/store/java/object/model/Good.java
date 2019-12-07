@@ -57,6 +57,6 @@ public class Good {
                 "Id=" + Id +
                 ", name='" + name + '\'' +
                 ", stock=" + stock +
-                ", price=" + price ;
+                ", price=" + price;
     }
 }

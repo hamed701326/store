@@ -1,12 +1,15 @@
 package ir.store.java.object.model.user;
 
-public class Address{
+public class Address {
     private String state;
     private String city;
     private String street;
     private long zipCode;
-    Address(){}
-    Address(String state, String city, String street, long zipCode) {
+
+    Address() {
+    }
+
+    public Address(String state, String city, String street, long zipCode) {
         this.state = state;
         this.city = city;
         this.street = street;
@@ -47,9 +50,9 @@ public class Address{
 
     @Override
     public String toString() {
-        return "'" + state + '\'' +" - '"+
-                 city + '\'' +" - '"+
-                 street + '\'' +" - "+
+        return state + " - " +
+                city + " - " +
+                street + " - " +
                 " zipCode:" + zipCode;
     }
 }
